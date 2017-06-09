@@ -8,32 +8,40 @@ def sum_of_integers(integers):
     return sum(integers)
 
 
-def sum_of_integers_exclude_k(integers):
+def sum_of_integers_exclude_k(integers, start):
     length_exclude_k = len(integers) - 1
     return (length_exclude_k
-            * (length_exclude_k + 1)
+            * (length_exclude_k + 2*start - 1)
             / 2)
 
 
-def find_k_use_math(integers):
+def find_k_use_math(integers, start):
     return (sum_of_integers(integers)
-            - sum_of_integers_exclude_k(integers))
+            - sum_of_integers_exclude_k(integers, start))
 
 
-def find_index_of_positive_value_from_2nd(integers):
+def find_who_was_reversed_twice(integers, offset):
     for i in xrange(1, len(integers)):
         if integers[i] > 0:
-            return i
+            return i + offset
     print "Not found k. Return -1."
     return -1
 
 
-def find_k_use_loop(integers):
+def is_pointing_inside_list(integers, pointer):
+    return (0 < pointer and pointer < len(integers))
+
+
+def reverse_pointed_value(integers, pointer):
+    integers[pointer] = -integers[pointer]
+
+
+def find_k_use_loop(integers, start):
+    offset = start - 1
     for i in xrange(0, len(integers)):
-        if abs(integers[i]) >= len(integers):
-            k = abs(integers[i])
-            return k
+        pointer = abs(integers[i]) - offset
+        if is_pointing_inside_list(integers, pointer):
+            reverse_pointed_value(integers, pointer)
         else:
-            integers[abs(integers[i])] = -integers[abs(integers[i])]
-    k = find_index_of_positive_value_from_2nd(integers)
-    return k
+            return pointer + offset
+    return find_who_was_reversed_twice(integers, offset)

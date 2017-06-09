@@ -5,62 +5,63 @@
 
 
 import random
-import heapq
 import unittest
 from find_k import find_k_use_math, find_k_use_loop
 
 
-def gen_integers(n, m):
-    if n < m:
-        k = random.randint(n, m)
-    elif (1 < m and m < n):
-        k = random.randint(1, n)
-    else:
-        k = m
-    integers = range(1, n+1) + [k]
+def gen_integers(start, end, k):
+    integers = range(start, end) + [k]
     random.shuffle(integers)
-    return integers, k
-
-
-def print_largest_two_integers_and_k(integers, k):
-    two_largest = heapq.nlargest(2, integers)
-    print ("Largest, second_largest, and k: %d, %d, %d"
-           % (two_largest[0], two_largest[1], k))
+    return integers
 
 
 class FindKTest(unittest.TestCase):
 
-    def test_k_greater_than_n(self):
+    def test_k_less_than_start(self):
         n = 65536 * 10
-        m = 65536 * 20
-        integers, k = gen_integers(n, m)
-        print_largest_two_integers_and_k(integers, k)
-        self.assertEqual(find_k_use_math(integers), k)
-        self.assertEqual(find_k_use_loop(integers), k)
+        start = 1024
+        end = n + start - 1
+        k = random.randint(1, start-1)
+        integers = gen_integers(start, end, k)
+        self.assertEqual(find_k_use_math(integers, start), k)
+        self.assertEqual(find_k_use_loop(integers, start), k)
 
-    def test_k_less_than_or_equal_to_n(self):
+    def test_k_equal_to_start(self):
         n = 65536 * 10
-        m = 65536
-        integers, k = gen_integers(n, m)
-        print_largest_two_integers_and_k(integers, k)
-        self.assertEqual(find_k_use_math(integers), k)
-        self.assertEqual(find_k_use_loop(integers), k)
+        start = 1024
+        end = n + start - 1
+        k = start
+        integers = gen_integers(start, end, k)
+        self.assertEqual(find_k_use_math(integers, start), k)
+        self.assertEqual(find_k_use_loop(integers, start), k)
 
-    def test_k_equal_to_1(self):
+    def test_k_ge_start_and_le_end(self):
         n = 65536 * 10
-        m = 1
-        integers, k = gen_integers(n, m)
-        print_largest_two_integers_and_k(integers, k)
-        self.assertEqual(find_k_use_math(integers), k)
-        self.assertEqual(find_k_use_loop(integers), k)
+        start = 1024
+        end = n + start - 1
+        k = random.randint(start, end)
+        integers = gen_integers(start, end, k)
+        self.assertEqual(find_k_use_math(integers, start), k)
+        self.assertEqual(find_k_use_loop(integers, start), k)
 
-    def test_k_equal_to_n(self):
+    def test_k_equal_to_end(self):
         n = 65536 * 10
-        m = n
-        integers, k = gen_integers(n, m)
-        print_largest_two_integers_and_k(integers, k)
-        self.assertEqual(find_k_use_math(integers), k)
-        self.assertEqual(find_k_use_loop(integers), k)
+        start = 1024
+        end = n + start - 1
+        k = end
+        integers = gen_integers(start, end, k)
+        self.assertEqual(find_k_use_math(integers, start), k)
+        self.assertEqual(find_k_use_loop(integers, start), k)
+
+    def test_k_greater_than_end(self):
+        n = 65536 * 10
+        start = 1024
+        end = n + start - 1
+        k = random.randint(end+1, end+n)
+        integers = gen_integers(start, end, k)
+        self.assertEqual(find_k_use_math(integers, start), k)
+        self.assertEqual(find_k_use_loop(integers, start), k)
+
 
 if __name__ == '__main__':
     unittest.main()
